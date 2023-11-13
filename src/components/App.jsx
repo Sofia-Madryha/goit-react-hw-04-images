@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import { fetchPhoto } from './api';
 import { SearchBar } from './SearchBar/SearchBar';
 import { Gallery } from './Gallery/Gallery';
@@ -22,7 +23,6 @@ export const App = () => {
         try {
           setLoading(true);
           const search = await fetchPhoto(query, page);
-
           setImages(prevState =>
             page === 1 ? search.hits : [...prevState, ...search.hits]
           );
@@ -56,8 +56,10 @@ export const App = () => {
       <SearchBar onSubmit={handleSubmit} />
 
       {images.length > 0 && <Gallery items={images} />}
-      {loading && <Loader></Loader>}
+      {error && toast.error('This is an error!')}
+      {loading && <Loader />}
       {loadMore && <Button onClick={handleLoadMore}></Button>}
+      <Toaster position="top-right" />
     </div>
   );
 };
